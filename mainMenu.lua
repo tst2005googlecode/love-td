@@ -1,4 +1,4 @@
-require('main')
+require('GlobalVar')
 
 function HoverMenu(x, y, width, height, firstImg, secondImg)
 	local mx, my = love.mouse.getPosition()
@@ -14,7 +14,9 @@ function ClickMenu(x, y, width, height, info)
 	local mx, my = love.mouse.getPosition()
 	
 	if ((mx > x) and (mx < x+width)) and ((my > y) and (my < y+height)) then
-		
+		if love.mouse.isDown('l') then
+			MenuInfo.level = info
+		end
 	end
 end
 
@@ -27,9 +29,13 @@ function mainMenu_load()
 	hPlayButton = love.graphics.newImage('Sprites/Buttons/mainMenu/hPlaybutton.png')
 	hScoreButton = love.graphics.newImage('Sprites/Buttons/mainMenu/hScorebutton.png')
 	hExitButton = love.graphics.newImage('Sprites/Buttons/mainMenu/hExitbutton.png')
+	
+	mainMenuBG = love.graphics.newImage('Sprites/Bg.png')
 end
 
 function mainMenu_draw()
+-- Draw Bg for this scene
+	love.graphics.draw(mainMenuBG, 0, 0)
 -- draw buttons with Hover function
 	HoverMenu(300, 200, 150, 50, uPlayButton, hPlayButton)
 	HoverMenu(300, 300, 150, 50, uScoreButton, hScoreButton)
@@ -37,5 +43,7 @@ function mainMenu_draw()
 end
 
 function mainMenu_update()
-
+	ClickMenu(300, 200, 150, 50, 'Map')
+	ClickMenu(300, 300, 150, 50, 'Score')
+	ClickMenu(300, 400, 150, 50, 'Exit')
 end
