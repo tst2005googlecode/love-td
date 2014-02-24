@@ -31,11 +31,17 @@ function mainMenu_load()
 	hExitButton = love.graphics.newImage('Sprites/Buttons/mainMenu/hExitbutton.png')
 	
 	mainMenuBG = love.graphics.newImage('Sprites/Bg.png')
+	
+	--load font
+	mainMenu_font = love.graphics.newFont('Fonts/towerruinscond.ttf', 100)
 end
 
 function mainMenu_draw()
 -- Draw Bg for this scene
 	love.graphics.draw(mainMenuBG, 0, 0)
+-- draw name for game
+	love.graphics.setFont(mainMenu_font)
+	love.graphics.print('Name TD', 200, 50)
 -- draw buttons with Hover function
 	HoverMenu(300, 200, 150, 50, uPlayButton, hPlayButton)
 	HoverMenu(300, 300, 150, 50, uScoreButton, hScoreButton)

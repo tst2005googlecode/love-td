@@ -7,7 +7,7 @@ function ChooseMap(x, y, width, height, info)
 	if ((mx > x) and (mx < x+width)) and ((my > y) and (my < y+height)) then
 		if love.mouse.isDown('l') then
 			GameInfo.Map = info
-			--Playing = true
+			Playing = true
 		end
 	end
 end
