@@ -2,10 +2,12 @@
 require('mainMenu')
 require('GlobalVar')
 require('MapMenu')
+require('Score')
 
 function love.load()
 		mainMenu_load()
 		MapMenu_load()
+		Score_load()
 end
 
 function love.draw()
@@ -13,6 +15,8 @@ function love.draw()
 		mainMenu_draw()
 	elseif (MenuInfo.level == 'Map' and Playing == false) then
 		MapMenu_draw()
+	elseif (MenuInfo.level == 'Score' and Playing == false) then
+		Score_draw()
 	end
 end
 
@@ -21,6 +25,8 @@ function love.update()
 		mainMenu_update()
 	elseif (MenuInfo.level == 'Map' and Playing == false) then
 	MapMenu_update()
+	elseif (MenuInfo.level == 'Score' and Playing == false) then
+	Score_update()
 	end
 end
 
