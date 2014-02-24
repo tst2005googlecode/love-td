@@ -1,3 +1,5 @@
+require('main')
+
 function HoverMenu(x, y, width, height, firstImg, secondImg)
 	local mx, my = love.mouse.getPosition()
 	
@@ -8,14 +10,16 @@ function HoverMenu(x, y, width, height, firstImg, secondImg)
 	end
 end
 
-function ClickMenu(x, y, width, height, call)
+function ClickMenu(x, y, width, height, info)
 	local mx, my = love.mouse.getPosition()
+	
 	if ((mx > x) and (mx < x+width)) and ((my > y) and (my < y+height)) then
+		
 	end
 end
 
 -- parent functions
-function Menu_load()
+function mainMenu_load()
 -- load pictures to be used
 	uPlayButton = love.graphics.newImage('Sprites/Buttons/mainMenu/uPlaybutton.png')
 	uScoreButton = love.graphics.newImage('Sprites/Buttons/mainMenu/uScorebutton.png')
@@ -25,13 +29,13 @@ function Menu_load()
 	hExitButton = love.graphics.newImage('Sprites/Buttons/mainMenu/hExitbutton.png')
 end
 
-function Menu_draw()
+function mainMenu_draw()
 -- draw buttons with Hover function
 	HoverMenu(300, 200, 150, 50, uPlayButton, hPlayButton)
 	HoverMenu(300, 300, 150, 50, uScoreButton, hScoreButton)
 	HoverMenu(300, 400, 150, 50, uExitButton, hExitButton) 
 end
 
-function Menu_update()
+function mainMenu_update()
 
 end
