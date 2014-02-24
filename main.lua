@@ -3,11 +3,13 @@ require('mainMenu')
 require('GlobalVar')
 require('MapMenu')
 require('Score')
+require('MainGame')
 
 function love.load()
 		mainMenu_load()
 		MapMenu_load()
 		Score_load()
+		Game_load()
 end
 
 function love.draw()
@@ -18,6 +20,9 @@ function love.draw()
 	elseif (MenuInfo.level == 'Score' and Playing == false) then
 		Score_draw()
 	end
+	if Playing == true then
+		Game_draw()
+	end
 end
 
 function love.update()
@@ -27,6 +32,9 @@ function love.update()
 	MapMenu_update()
 	elseif (MenuInfo.level == 'Score' and Playing == false) then
 	Score_update()
+	end
+	if Playing == true then
+		Game_update()
 	end
 end
 
