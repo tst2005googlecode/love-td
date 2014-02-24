@@ -1,0 +1,10 @@
+1|Emil|5000
+2|None|0
+3|None|0
+4|None|0
+5|None|0
+6|None|0
+7|None|0
+8|None|0
+9|None|0
+10|None|0
