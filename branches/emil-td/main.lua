@@ -1,33 +1,26 @@
 --require files to be used
 require('mainMenu')
-
-GameInfo = {
-Map = none,
-Money = 60,
-Lives = 20,
-Stage = 0
-}
-
-MenuInfo = {level = 'main'}
-
-Playing = false
-
+require('GlobalVar')
+require('MapMenu')
 
 function love.load()
-	if (MenuInfo.level == 'main' and Playing == false) then
 		mainMenu_load()
-	end
+		MapMenu_load()
 end
 
 function love.draw()
 	if (MenuInfo.level == 'main' and Playing == false) then
 		mainMenu_draw()
+	elseif (MenuInfo.level == 'Map' and Playing == false) then
+		MapMenu_draw()
 	end
 end
 
 function love.update()
 	if (MenuInfo.level == 'main' and Playing == false) then
 		mainMenu_update()
+	elseif (MenuInfo.level == 'Map' and Playing == false) then
+	MapMenu_update()
 	end
 end
 
