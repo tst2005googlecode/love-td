@@ -33,7 +33,7 @@ function TowerMenu_load()
 end
 
 function TowerMenu_draw()
-		DrawMenu()
+	DrawMenu()
 end
 
 function TowerMenu_update()

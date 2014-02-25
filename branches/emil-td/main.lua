@@ -10,6 +10,7 @@ function love.load()
 		MapMenu_load()
 		Score_load()
 		Game_load()
+		crap = love.graphics.newFont('Fonts/towerruinscond.ttf', 20)
 end
 
 function love.draw()
@@ -23,6 +24,7 @@ function love.draw()
 	if Playing == true then
 		Game_draw()
 	end
+	showCrap(0,0)
 end
 
 function love.update()
@@ -37,4 +39,10 @@ function love.update()
 		Game_update()
 	end
 end
-
+-- test functions
+function showCrap(x, y)
+	local mx, my = love.mouse.getPosition()
+	love.graphics.setFont(crap)
+	love.graphics.print(mx..', ', x,y)
+	love.graphics.print(my, x+50, y)
+end
