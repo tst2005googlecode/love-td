@@ -30,3 +30,51 @@ MapData.Map2 = {
 	{208, 0}
 
 }
+
+function isPointOutsidePath (map, x, y)
+	if (not MapData[map]) then return false end
+	if (not x) or (not y) then return false end
+	
+	local d = MapData.Width/2 + MapData.Margin
+	
+	for k,node in ipairs (MapData[map]) do
+		if (MapData[map][k+1]) then
+			local node2 = MapData[map][k+1]
+			local rot = FindRotation (node[1], node[2], node2[1], node2[2])
+			
+			if ((rot == 0) or (rot == 270)) then
+				if ((x > node[1]-d) and (x < node2[1]+d)) and ((y > node[2]-d) and (y < node2[2]+d)) then
+					return false
+				end
+			elseif ((rot == 180) or (rot == 90)) then
+				if ((x > node[1]-d) and (x < node2[1]+d)) and ((y < node[2]-d) and (y > node2[2]+d)) then
+					return false
+				end
+			end
+		end
+	end
+	
+	return true
+end
+
+local function GetMapDistance(x, y, x2, y2)
+    local Dx = x2 - x
+    local Dy = y2 - y
+    return math.sqrt(Dx^2 + Dy^2)
+end
+
+function GetMapLength(map)
+    local c = 0
+    for k, node in ipairs(MapData[map]) do
+        if (MapData[map][k+1]) then
+            c = c GetMapDistance(node[1], node[2], MapData[map][k+1][1], MapData[map][k+1][2])
+        end
+    end
+    return c
+end
+
+    function FindRotation(x, y, x2, y2)
+        local t = -math.deg (math.atan2(x2-x,y2-y))
+        if t < 0 then t = t + 360 end
+        return t
+    end
