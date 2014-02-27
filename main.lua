@@ -4,6 +4,7 @@ require('GlobalVar')
 require('MapMenu')
 require('Score')
 require('MainGame')
+require('ExitGame')
 
 function love.load()
 		mainMenu_load()
@@ -20,6 +21,8 @@ function love.draw()
 		MapMenu_draw()
 	elseif (MenuInfo.level == 'Score' and Playing == false) then
 		Score_draw()
+    elseif (MenuInfo.level == 'Exit' and Playing == false) then
+        --exit game
 	end
 	if Playing == true then
 		Game_draw()
@@ -34,6 +37,8 @@ function love.update()
 	MapMenu_update()
 	elseif (MenuInfo.level == 'Score' and Playing == false) then
 	Score_update()
+    elseif (MenuInfo.level == 'Exit' and Playing == false) then
+        Exit_Update()
 	end
 	if Playing == true then
 		Game_update()
