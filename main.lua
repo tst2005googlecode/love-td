@@ -3,15 +3,16 @@
     main.lua
         
     * DEVELOPERS:   Joachim Andersen
-                    Emil Plovmand
 
 --]]
 
 --[[
 
-    Main file, contains all game logic and callbacks
+    Main file, contains all game logic and LÖVE callbacks
     
 --]]
+
+local PROJECT_FILES = {''}
 
 --[[
 
@@ -61,9 +62,34 @@ function love.update (dt)
     return true
 end
 
+function registerGameUpdateCallback (func)
+    table.insert (t_ProcessCallbacks, func)
+end
 
+function deregisterGameUpdateCallback (func)
+    for k,c in ipairs (t_ProcessCallbacks) do
+        if (c == func) then
+            table.remove (t_ProcessCallbacks, k)
+        end
+    end
+end
 
+--[[
 
+    Game data and logic
+    
+--]]
+
+local t_GameData = {}
+
+function love.load ()
+    
+    for i,file in ipairs (PROJECT_FILES) do
+        require (file)
+    end
+    
+    return true
+end
 
 
 
