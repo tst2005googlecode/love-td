@@ -1,4 +1,4 @@
-MapData = {Width = 42, Margin = 5}
+MapData = {Width = 42, Margin = 21}
 
 MapData.Map1 = {
 	{70, 0},
@@ -31,30 +31,32 @@ MapData.Map2 = {
 
 }
 
-function isPointOutsidePath (map, x, y)
-	if (not MapData[map]) then return false end
-	if (not x) or (not y) then return false end
-	
-	local d = MapData.Width/2 + MapData.Margin
-	
-	for k,node in ipairs (MapData[map]) do
-		if (MapData[map][k+1]) then
-			local node2 = MapData[map][k+1]
-			local rot = FindRotation (node[1], node[2], node2[1], node2[2])
-			
-			if ((rot == 0) or (rot == 270)) then
-				if ((x > node[1]-d) and (x < node2[1]+d)) and ((y > node[2]-d) and (y < node2[2]+d)) then
-					return false
-				end
-			elseif ((rot == 180) or (rot == 90)) then
-				if ((x > node[1]-d) and (x < node2[1]+d)) and ((y < node[2]-d) and (y > node2[2]+d)) then
-					return false
-				end
-			end
-		end
-	end
-	
-	return true
+
+function IsOutsidePath(map, x, y)
+    if (not MapData[map]) then return false end
+    if (not x) or (not y) then return false end
+    
+    local d = MapData.Width/2 + MapData.Margin
+    
+    for k,node in ipairs(MapData[map]) do
+        if (MapData[map][k+1]) then
+            local node2 = MapData[map][k+1]
+            local rotation = FindRotation (node[1], node[2], node2[1], node2[2])
+            if (rotation == 0) or (rotation == 270) then
+                if ((x > node[1]-MapData.Margin) and (x < node2[1]+MapData.Margin) and (y < node2[2]+MapData.Margin) and (y > node[2]-MapData.Margin)) then
+                    return false
+                end
+            end
+            
+            if (rotation == 90) or (rotation == 180) then
+                if ((x > node2[1]-MapData.Margin) and (x < node[1]+MapData.Margin) and (y < node[2]+MapData.Margin) and (y > node2[2]-MapData.Margin)) then
+                    return false
+                end
+            end
+            
+        end
+    end
+    return true
 end
 
 local function GetMapDistance(x, y, x2, y2)
@@ -67,7 +69,7 @@ function GetMapLength(map)
     local c = 0
     for k, node in ipairs(MapData[map]) do
         if (MapData[map][k+1]) then
-            c = c GetMapDistance(node[1], node[2], MapData[map][k+1][1], MapData[map][k+1][2])
+            c = c + GetMapDistance(node[1], node[2], MapData[map][k+1][1], MapData[map][k+1][2])
         end
     end
     return c
