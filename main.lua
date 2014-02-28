@@ -16,23 +16,29 @@ local PROJECT_FILES = {''}
 
 --[[
 
-    Screen-render handlers
+    Screen-render handler
     
 --]]
 
+local t_DefaultColor = {255, 255, 255, 255}
 local t_RenderItems = {}
 render = {}
 
 function love.draw ()
     for strItemID, t_Item in ipairs (t_RenderItems) do
+        love.grapics.setColor (unpack(t_Item.color or t_DefaultColor))
         love.graphics[t_Item.method](unpack(t_Item))
     end
     
     return true
 end
 
-function render.add (strID, strMethod, ...)
-    t_RenderItems[strID] = {['method'] = strMethod, ...}
+function render.get (strID)
+    return t_RenderItems[strID]
+end
+
+function render.add (strID, t_Color, strMethod, ...)
+    t_RenderItems[strID] = {['method'] = strMethod, ['color'] = t_Color, ...}
     return true
 end
 
@@ -48,29 +54,39 @@ end
 
 --[[
 
-    Game process handlers
+    Game callback handlers
     
 --]]
 
-local t_ProcessCallbacks = {}
+local t_Callbacks = 
+{
+    ['focus'] =         {},
+    ['keypressed'] =    {},
+    ['keyreleased'] =   {},
+    ['mousefocus'] =    {},
+    ['mousepressed'] =  {},
+    ['mousereleased'] = {},
+    ['textinput'] =     {},
+    ['threaderror'] =   {},
+    ['visible'] =       {},
+    ['update'] =        {}
+}
 
-function love.update (dt)
-    for i,strCallbackFunc in ipairs (t_ProcessCallbacks) do
-        _G[strCallbackFunc](dt)
-    end
-    
-    return true
-end
-
-function registerGameUpdateCallback (func)
-    table.insert (t_ProcessCallbacks, func)
-end
-
-function deregisterGameUpdateCallback (func)
-    for k,c in ipairs (t_ProcessCallbacks) do
-        if (c == func) then
-            table.remove (t_ProcessCallbacks, k)
+for strCallback in pairs (t_CallBacks) do
+    function love[strCallback] (...)
+        for _,strCallbackFunc in ipairs (t_Callbacks[strCallback]) do
+            _G[strCallbackFunc](...)
         end
+    end
+end
+
+function registerGameCallbackFunc (strCallback, strFunc)
+    return table.insert (t_Callbacks[strCallback], strFunc)
+end
+
+function deregisterGameCallbackFunc (strCallback, strFunc)
+    for k,strCallbackFunc in ipairs (t_Callbacks[strCallback]) do
+        return table.remove (t_Callbacks[strCallback], k)
     end
 end
 
