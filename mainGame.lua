@@ -73,10 +73,15 @@ function Game_draw()
 	TowerMenu_draw()
 	ExitToGameMenu(800 - 25, 6, 19.5, 19.5)
     MuteGame(800-50, 6, 19.5, 19.5)
-    -- CHeck isPointOutsidepath and tell us
+    -- Check isPointOutsidepath and tell us
     local mx, my = love.mouse.getPosition()
-    local outside = isPointOutsidePath ('Map1', mx, my)
-	love.graphics.print (string.format('%s', (outside and "ok") or "no"), 100, 0)
+    if (GameInfo.Map == '1') then
+        local outside = IsOutsidePath ('Map1', mx, my)
+        love.graphics.print (string.format('%s', (outside and "ok") or "no"), 100, 0)
+       elseif (GameInfo.Map == '2') then
+        local outside = IsOutsidePath('Map2', mx, my)
+        love.graphics.print (string.format('%s', (outside and "ok") or "no"), 100, 0)
+    end
 end
 
 function Game_update()
