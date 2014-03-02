@@ -12,7 +12,13 @@
     
 --]]
 
-local PROJECT_FILES = {''}
+local PROJECT_FILES = 
+{
+'gui',
+'gui/menu'
+}
+
+WIN_W, WIN_H = 800, 600
 
 --[[
 
@@ -22,11 +28,16 @@ local PROJECT_FILES = {''}
 
 local t_DefaultColor = {255, 255, 255, 255}
 local t_RenderItems = {}
+local t_RenderIDs = {}
 render = {}
 
 function love.draw ()
-    for strItemID, t_Item in ipairs (t_RenderItems) do
-        love.grapics.setColor (unpack(t_Item.color or t_DefaultColor))
+    for _,strItemID in ipairs (t_RenderIDs) do
+        local t_Item = t_RenderItems[strItemID]
+        if (t_Item.font) then
+            love.graphics.setFont (t_Item.font)
+        end
+        love.graphics.setColor (unpack(t_Item.color or t_DefaultColor))
         love.graphics[t_Item.method](unpack(t_Item))
     end
     
@@ -37,8 +48,9 @@ function render.get (strID)
     return t_RenderItems[strID]
 end
 
-function render.add (strID, t_Color, strMethod, ...)
-    t_RenderItems[strID] = {['method'] = strMethod, ['color'] = t_Color, ...}
+function render.add (strID, t_Color, font, strMethod, ...)
+    t_RenderItems[strID] = {['method'] = strMethod, ['font'] = font, ['color'] = t_Color, ...}
+    table.insert (t_RenderIDs, strID)
     return true
 end
 
@@ -49,6 +61,12 @@ end
 
 function render.remove (strID)
     t_RenderItems[strID] = nil
+    for k,strItemID in ipairs (t_RenderIDs) do
+        if (strItemID == strID) then
+            table.remove (t_RenderIDs, k)
+        end
+    end
+    
     return true
 end
 
@@ -72,8 +90,8 @@ local t_Callbacks =
     ['update'] =        {}
 }
 
-for strCallback in pairs (t_CallBacks) do
-    function love[strCallback] (...)
+for strCallback in pairs (t_Callbacks) do
+    love[strCallback] = function (...)
         for _,strCallbackFunc in ipairs (t_Callbacks[strCallback]) do
             _G[strCallbackFunc](...)
         end
@@ -104,11 +122,10 @@ function love.load ()
         require (file)
     end
     
+    menu.create ()
+    
     return true
 end
-
-
-
 
 
 
