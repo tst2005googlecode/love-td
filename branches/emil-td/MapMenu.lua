@@ -43,8 +43,8 @@ function MapMenu_update()
 	--Back Click
 	ClickMenu(0, 562, 150, 38, 'main')
 	--CLick for maps
-	ChooseMap(50, 275, 100, 100, '1')
-	ChooseMap(250, 275, 100, 100, '2')
-	ChooseMap(450, 275, 100, 100, '3')
-	ChooseMap(650, 275, 100, 100, '4')
+	ChooseMap(50, 275, 100, 100, 'Map1')
+	ChooseMap(250, 275, 100, 100, 'Map2')
+	ChooseMap(450, 275, 100, 100, 'Map3')
+	ChooseMap(650, 275, 100, 100, 'Map4')
 end

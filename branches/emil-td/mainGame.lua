@@ -3,12 +3,12 @@ require('towerMenu')
 require('MapData')
 
 function MapChosed()
-	if GameInfo.Map == '1' then
+	if GameInfo.Map == 'Map1' then
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.draw(Game_Map1_BG, 0, 0)
 		love.graphics.setColor(mapR, mapG, mapB)
 		love.graphics.draw(Game_Map1,0,0)
-	elseif GameInfo.Map == "2" then
+	elseif GameInfo.Map == "Map2" then
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.draw(Game_Map2_BG, 0, 0)
 		love.graphics.setColor(mapR, mapG, mapB)
