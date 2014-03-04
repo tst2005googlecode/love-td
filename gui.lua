@@ -108,7 +108,6 @@ function gui.env.button:setButtonPosition (intX, intY)
     return true
 end
 
-button:setButtonPosition (0, 0)
 
 --[[
 
