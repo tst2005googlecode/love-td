@@ -12,8 +12,9 @@
     
 --]]
 
-gui = {env = {image = {}, button = {}, generic = {}}, objects = {}}
+gui = {env = {image = {}, button = {}, rectangle = {}, generic = {}}, objects = {}}
 COLORS = {['white'] = {255, 255, 255, 255}, ['black'] = {0, 0, 0, 255}, ['markerblack'] = {0, 0, 0, 128}}
+
 local intRandomID = 1
 local t_FontData = {['VeraSans'] = love.graphics.newFont(14), ['OstrichSans'] = love.graphics.newFont('media/OstrichSans.otf', 22)}
 local currentHoverGUIObject
@@ -21,6 +22,7 @@ local currentHoverGUIObject
 local guiGenericEnv_mt = {__index = function(t,k) return gui.env.generic[k] end}
 setmetatable (gui.env.image, guiGenericEnv_mt)
 setmetatable (gui.env.button, guiGenericEnv_mt)
+setmetatable (gui.env.rectangle, guiGenericEnv_mt)
 
 local function create (obj)
     setmetatable (obj, {__index = function(t,k) return gui.env[obj.guiType][k] end})
@@ -40,7 +42,7 @@ function gui.createButton (intX, intY, intW, intH, strText, t_BgColor, t_TextCol
     local strRectID = 'button' .. intRandomID
     local font = t_FontData[strFont]
     
-    render.add (strRectID, t_BgColor, font, 'rectangle', 'fill', intX, intY, intW, intH)
+    render.add (strRectID, t_BgColor, nil, 'rectangle', 'fill', intX, intY, intW, intH)
     
     local strTextID = 'buttonText' .. intRandomID
     
@@ -68,7 +70,7 @@ function gui.env.button:destroy ()
     self = nil
 end
 
-function gui.env.button:setButtonText (strText)
+function gui.env.button:setText (strText)
     local t_Settings = render.get (self.textID)
     t_Settings[1] = strText
     
@@ -78,7 +80,7 @@ function gui.env.button:setButtonText (strText)
     return true
 end
 
-function gui.env.button:setButtonColor (t_BgColor, t_TextColor)
+function gui.env.button:setColor (t_BgColor, t_TextColor)
     local t_TextSettings = render.get (self.textID)
     local t_RectSettings = render.get (self.rectID)
     
@@ -92,7 +94,7 @@ function gui.env.button:setButtonColor (t_BgColor, t_TextColor)
     return true
 end
 
-function gui.env.button:setButtonPosition (intX, intY)
+function gui.env.button:setPosition (intX, intY)
     local t_TextSettings = render.get (self.textID)
     local t_RectSettings = render.get (self.rectID)
     
@@ -102,7 +104,7 @@ function gui.env.button:setButtonPosition (intX, intY)
     t_RectSettings[2], t_RectSettings[3] = intX, intY
     
     -- Update bbox
-    self.bbox[3], self.bbox[4] = self.bbox[3]-self.bbox[1] + intX, iself.bbox[4]-self.bbox[2] + intY
+    self.bbox[3], self.bbox[4] = self.bbox[3]-self.bbox[1] + intX, self.bbox[4]-self.bbox[2] + intY
     self.bbox[1], self.bbox[2] = intX, intY
     
     return true
@@ -117,16 +119,68 @@ end
 function gui.createImage (intX, intY, image)
     intRandomID = intRandomID + 1
     local strImageID = 'image' .. intRandomID
-    render.add (strImageID, nil, nil, 'draw', image, intX, intY)
+    render.add (strImageID, nil, nil, 'draw', image, intX, intY, 0)
     
     local intW, intH = image:getDimensions ()
     return create ({guiType = 'image', imageID = strImageID, imageSource = image, bbox = {intX, intY, intX + intW, intY + intH}})
 end
 
-function gui.env.image:setImagePosition (intX, intY)
+function gui.env.image:destroy ()
+    render.remove (self.imageID)
+    
+    if (currentHoverGUIObject == self) then
+        currentHoverGUIObject = nil
+    end
+    
+    for k,GUIObj in ipairs (gui.objects) do
+        if (GUIObj == self) then
+            table.remove (gui.objects, k)
+        end
+    end
+    
+    self = nil
+end
+
+function gui.env.image:setScale (int_sX, int_sY)
+    local t_Settings = render.get (self.imageID)
+    t_Settings[5], t_Settings[6] = int_sX, int_sY
+    return true
+end
+
+function gui.env.image:setPosition (intX, intY)
     local t_Settings = render.get (self.imageID)
     t_Settings[2], t_Settings[3] = intX, intY
     return true
+end
+
+--[[
+
+    Rectangles
+    
+--]]
+
+function gui.createRectangle (strMode, intX, intY, intWidth, intHeight, t_Color)
+    intRandomID = intRandomID + 1
+    local strRectID = 'rect' .. intRandomID
+    render.add (strRectID, t_Color, nil, 'rectangle', strMode, intX, intY, intWidth, intHeight)
+    
+    return create ({guiType = 'rectangle', rectID = strRectID, bbox = {intX, intY, intX+intWidth, intY+intHeight}})
+end
+
+function gui.env.rectangle:destroy ()
+    render.remove (self.rectID)
+    
+    if (currentHoverGUIObject == self) then
+        currentHoverGUIObject = nil
+    end
+    
+    for k,GUIObj in ipairs (gui.objects) do
+        if (GUIObj == self) then
+            table.remove (gui.objects, k)
+        end
+    end
+    
+    self = nil
 end
 
 --[[

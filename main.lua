@@ -122,6 +122,8 @@ function love.load ()
         require (file)
     end
     
+    love.graphics.setBackgroundColor (102, 102, 102)
+    
     menu.create ()
     
     return true
