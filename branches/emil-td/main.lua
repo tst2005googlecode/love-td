@@ -44,7 +44,7 @@ function love.update(dt)
 end
 
 function render.add (strID, t_color, strMethod, strFont, ...)
-    t_renderItems[strID] = {['method'] = strMethod, ['color'] = t_color, ['font'] = strFont, ...}
+    t_renderItems[strID] = {['ID'] = strID, ['method'] = strMethod, ['color'] = t_color, ['font'] = strFont, ...}
     table.insert(t_renderIDs, strID)
     return true
 end
