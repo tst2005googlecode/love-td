@@ -25,6 +25,18 @@ function gui.createButton(intX, intY, intW, intH, strText, t_BgColor, t_TextColo
 end
 
 function gui.env.buttons:setColor(t_BgColor, t_TextColor)
+    local t_button = render.get(self.ID)
+    local t_text = render.get(self.ID)
     
-    
+    if (t_BgColor) then
+        t_button.color = t_BgColor
+    end
+    if (t_TextColor) then
+        t_text.color = t_TextColor
+    end
+    return true
+end
+
+function gui.env.generic:setHoverHandler (strFunc_Enter, strFunc_Exit)
+    self.hoverHandler = {['enter'] = strFunc_Enter, ['exit'] = strFunc_Exit}
 end
