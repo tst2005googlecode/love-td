@@ -9,34 +9,60 @@
 local intOBID = 1
 local t_FontData = {['VeraSans'] = love.graphics.newFont(14), ['OstrichSans'] = love.graphics.newFont('media/OstrichSans.otf', 22)}
 
-gui = {env = {images = {}, buttons = {}, generic = {}}}
+gui = {}
 
 
-function gui.createButton(intX, intY, intW, intH, strText, t_BgColor, t_TextColor, strFont)
+function gui.createButton(intX, intY, intW, intH, strText, t_BgColor, t_TextColor, strFont, Func_Enter, Func_Exit, t_HoverColor, strFunc_ClickH)
+
     intOBID = intOBID +1
-    local buttonID = 'Button' .. intOBID
-    local textID = 'Text' .. intOBID
+    
     local font = t_FontData[strFont]
-    local FontMidX, FontMidY = (intX + intW - intW/2 - font:getWidth(strText)/2 + 2), (intY + intH - intH/2 - font:getHeight()/2 + 2)
+    local fontX = intX + intW - intW/2 - font:getWidth(strText)/2 + 2
+    local fontY = intY + intH - intH/2 - font:getHeight()/2 + 2
+    
+    local intRectID = 'Button' .. intOBID
+    local intTextID = 'Text' .. intOBID
+    
+    render.HoverAdd(intRectID, intX, intY, intW, intH, Func_Enter, Func_Exit, t_HoverColor, t_BgColor, strFunc_ClickH )
+    
+    render.add(intRectID, t_BgColor, 'rectangle', nil, 'fill', intX, intY, intW, intH)
+    render.add(intTextID, t_TextColor, 'print', font, strText, fontX, fontY)
     
     
-    render.add(buttonID, t_BgColor, 'rectangle',nil,'fill', intX, intY, intW, intH)
-    render.add(textID, t_TextColor, 'print', font, strText, FontMidX, FontMidY )
-end
-
-function gui.env.buttons:setColor(t_BgColor, t_TextColor)
-    local t_button = render.get(self.ID)
-    local t_text = render.get(self.ID)
-    
-    if (t_BgColor) then
-        t_button.color = t_BgColor
-    end
-    if (t_TextColor) then
-        t_text.color = t_TextColor
-    end
     return true
 end
 
-function gui.env.generic:setHoverHandler (strFunc_Enter, strFunc_Exit)
-    self.hoverHandler = {['enter'] = strFunc_Enter, ['exit'] = strFunc_Exit}
+function gui_setColor(strID, t_Color)
+       strID.color = t_Color 
+       
+       return true
+end
+
+function gui.createRectangle(intX, intY, intW, intH, t_BgColor)
+    intOBID = intOBID +1
+    
+    local intRectID = 'Rectangle' .. intOBID
+    
+    render.add(intRectID, t_BgColor, 'rectangle', nil, intX, intY, intW, intH, 'fill', intX, intY, intW, intH)
+end
+
+function gui.createImage(intX, intY, intW, intH, image)
+    intOBID = intOBID +1
+    
+    local ImgID = 'Image' .. intOBID
+    
+    render.add(ImgID, nil, 'draw', nil, intX, intY, intW, intH, image, intX, intY, 0 )
+end
+
+
+
+function isPointInsideBox (pX, pY, bX, bY, bX2, bY2)
+    if ((pX > bX)
+    and (pX < bX2)
+    and (pY > bY)
+    and (pY < bY2)) then
+        return true
+    end
+    
+    return false
 end
