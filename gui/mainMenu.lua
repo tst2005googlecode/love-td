@@ -16,14 +16,18 @@ local BG_COLOR = {0, 0, 120}
 
 local Menu = {gui = {env = {button = {}}}}
 
+function quit()
+    love.event.quit( )
+end
+
 function main_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
     
 
     Menu.gui.env.button.startGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*2 + BUTTON_M, BUTTON_W, BUTTON_H, 'Start Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'map_menu_create' )
-    Menu.gui.env.button.loadGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2 , BUTTON_W, BUTTON_H, 'Load Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover)
+    Menu.gui.env.button.loadGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2 , BUTTON_W, BUTTON_H, 'Load Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'load_menu_create')
     Menu.gui.env.button.highScore = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*4 + BUTTON_M*3 , BUTTON_W, BUTTON_H, 'HighScores', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'score_menu_create')
-    Menu.gui.env.button.endGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*5 + BUTTON_M*4 , BUTTON_W, BUTTON_H, 'End Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover)
+    Menu.gui.env.button.endGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*5 + BUTTON_M*4 , BUTTON_W, BUTTON_H, 'End Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'quit')
     
     return true
 end
@@ -31,10 +35,10 @@ end
 function map_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
     
-    Menu.gui.env.button.Map1 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*2 + BUTTON_M, BUTTON_W, BUTTON_H, 'Map1', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
-    Menu.gui.env.button.Map2 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2, BUTTON_W, BUTTON_H, 'Map2', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
-    Menu.gui.env.button.Map3 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*4 + BUTTON_M*3, BUTTON_W, BUTTON_H, 'Map3', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
-    Menu.gui.env.button.Map4 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*5 + BUTTON_M*4, BUTTON_W, BUTTON_H, 'Map4', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
+    Menu.gui.env.button.Map1 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*2 + BUTTON_M, BUTTON_W, BUTTON_H, 'Map 1', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
+    Menu.gui.env.button.Map2 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2, BUTTON_W, BUTTON_H, 'Map 2', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
+    Menu.gui.env.button.Map3 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*4 + BUTTON_M*3, BUTTON_W, BUTTON_H, 'Map 3', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
+    Menu.gui.env.button.Map4 = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*5 + BUTTON_M*4, BUTTON_W, BUTTON_H, 'Map 4', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, nil )
     Menu.gui.env.button.MapBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
     
     return true
@@ -43,5 +47,11 @@ end
 function score_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
     
-    Menu.gui.env.button.ScoreBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
+    Menu.gui.env.button.scoreBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
+end
+
+function load_menu_create()
+    love.graphics.setBackgroundColor( BG_COLOR )
+    
+    Menu.gui.env.button.loadBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
 end
