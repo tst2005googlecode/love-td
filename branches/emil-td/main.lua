@@ -11,6 +11,7 @@ t_renderIDs = {}
 render = {}
 t_HoverObject = {}
 t_HoverObjectId = {}
+local tid, maxtid = 0, 1
 
 t_IDs = {}
 
@@ -56,7 +57,9 @@ function love.update(dt)
                 local t_item2 = t_renderIDs[strItemID]
                 if (isPointInsideBox(mx, my, t_item.X, t_item.Y, t_item.X + t_item.W, t_item.Y + t_item.H )) then
                     if ((love.mouse.isDown('l')) and (t_item.ClickHandler)) then
-                        render.loadPage(t_item.ClickHandler)
+                        if (tid > maxtid) then
+                            render.loadPage(t_item.ClickHandler)
+                        end
                     end
                     if (t_item.Func_Enter) then
                         _G[t_item.Func_Enter](t_item2, t_item.HoverColor)
@@ -69,7 +72,7 @@ function love.update(dt)
             end
         end
    end
-   
+   tid = tid +0.1
    return true
 end
 
@@ -112,6 +115,7 @@ end
 function render.loadPage(strFunc)
     render.HoverRemoveAll()
     render.removeAll()
+    tid = 0
    _G[strFunc]()
    
    return true
