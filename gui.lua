@@ -15,7 +15,6 @@
 gui = {env = {image = {}, button = {}, rectangle = {}, generic = {}}, objects = {}}
 COLORS = {['white'] = {255, 255, 255, 255}, ['black'] = {0, 0, 0, 255}, ['markerblack'] = {0, 0, 0, 128}}
 
-local intRandomID = 1
 local t_FontData = {['VeraSans'] = love.graphics.newFont(14), ['OstrichSans'] = love.graphics.newFont('media/OstrichSans.otf', 22)}
 local currentHoverGUIObject
 
@@ -33,30 +32,54 @@ end
 
 --[[
 
+    GUI engine
+    
+-]]
+
+function gui_doRender ()
+    for _,GUIObj in ipairs (gui.objects) do
+        GUIObj:render ()
+    end
+end
+registerGameCallbackFunc ('draw', 'gui_doRender')
+
+--[[
+
     Buttons
     
 --]]
 
 function gui.createButton (intX, intY, intW, intH, strText, t_BgColor, t_TextColor, strFont)
-    intRandomID = intRandomID + 1
-    local strRectID = 'button' .. intRandomID
     local font = t_FontData[strFont]
     
-    render.add (strRectID, t_BgColor, nil, 'rectangle', 'fill', intX, intY, intW, intH)
+    local GUIObj = {}
+    GUIObj.guiType  = 'button'
+    GUIObj.text     = strText
+    GUIObj.x        = intX
+    GUIObj.y        = intY
+    GUIObj.textX    = intX + intW - intW/2 - font:getWidth(strText)/2 + 2
+    GUIObj.textY    = intY + intH - intH/2 - font:getHeight()/2 + 2
+    GUIObj.w        = intW
+    GUIObj.h        = intH
+    GUIObj.color    = t_BgColor
+    GUIObj.txtColor = t_TextColor
+    GUIObj.font     = font
+    GUIObj.bbox     = {intX, intY, intX+intW, intY+intH}
     
-    local strTextID = 'buttonText' .. intRandomID
+    return create (GUIObj)
+end
+
+function gui.env.button:render ()
+    love.graphics.setColor (self.color)
+    love.graphics.rectangle ('fill', self.x, self.y, self.w, self.h)
     
-    render.add (strTextID, t_TextColor, font, 'print', strText, 
-                intX + intW - intW/2 - font:getWidth(strText)/2 + 2,
-                intY + intH - intH/2 - font:getHeight()/2 + 2)
+    love.graphics.setColor (self.txtColor)
+    love.graphics.setFont (self.font)
     
-    return create ({guiType = 'button', rectID = strRectID, textID = strTextID, bbox = {intX, intY, intX+intW, intY+intH}})
+    love.graphics.print (self.text, self.textX, self.textY)
 end
 
 function gui.env.button:destroy ()
-    render.remove (self.rectID)
-    render.remove (self.textID)
-    
     if (currentHoverGUIObject == self) then
         currentHoverGUIObject = nil
     end
@@ -71,41 +94,34 @@ function gui.env.button:destroy ()
 end
 
 function gui.env.button:setText (strText)
-    local t_Settings = render.get (self.textID)
-    t_Settings[1] = strText
-    
-    local intW = self.bbox[3] - self.bbox[1]
-    t_Settings[2] = self.bbox[3] - intW/2 - t_Settings.font:getWidth(strText)/2 + 2
+    self.text = strText
+    self.textX = self.x - self.w/2 - self.font:getWidth(strText)/2 + 2
     
     return true
 end
 
 function gui.env.button:setColor (t_BgColor, t_TextColor)
-    local t_TextSettings = render.get (self.textID)
-    local t_RectSettings = render.get (self.rectID)
-    
     if (t_BgColor) then
-        t_RectSettings.color = t_BgColor
+        self.color = t_BgColor
     end
     if (t_TextColor) then
-        t_TextSettings.color = t_TextColor
+        self.txtColor = t_TextColor
     end
     
     return true
 end
 
 function gui.env.button:setPosition (intX, intY)
-    local t_TextSettings = render.get (self.textID)
-    local t_RectSettings = render.get (self.rectID)
+    local int_DiffX, int_DiffY = intX - self.x, intY - self.y
+    self.x = intX
+    self.y = intY
+    self.textX = self.textX + int_DiffX
+    self.textY = self.textY + int_DiffY
     
-    -- Update render setting
-    local int_DiffX, int_DiffY = intX - self.bbox[1], intY - self.bbox[2]
-    t_TextSettings[2], t_TextSettings[3] = t_TextSettings[2] + int_DiffX, t_TextSettings[3] + int_DiffY
-    t_RectSettings[2], t_RectSettings[3] = intX, intY
-    
-    -- Update bbox
-    self.bbox[3], self.bbox[4] = self.bbox[3]-self.bbox[1] + intX, self.bbox[4]-self.bbox[2] + intY
-    self.bbox[1], self.bbox[2] = intX, intY
+    self.bbox[1] = intX
+    self.bbox[2] = intY
+    self.bbox[3] = intX + self.w
+    self.bbox[4] = intY + self.h
     
     return true
 end
@@ -117,17 +133,28 @@ end
 --]]
 
 function gui.createImage (intX, intY, image)
-    intRandomID = intRandomID + 1
-    local strImageID = 'image' .. intRandomID
-    render.add (strImageID, nil, nil, 'draw', image, intX, intY, 0)
-    
     local intW, intH = image:getDimensions ()
-    return create ({guiType = 'image', imageID = strImageID, imageSource = image, bbox = {intX, intY, intX + intW, intY + intH}})
+    
+    local GUIObj = {}
+    GUIObj.guiType      = 'image'
+    GUIObj.x            = intX
+    GUIObj.y            = intY
+    GUIObj.orientation  = 0
+    GUIObj.scaleX       = 0
+    GUIObj.scaleY       = 0
+    GUIObj.image        = image
+    GUIObj.bbox         = {intX, intY, intX+intW, intY+intH}
+    
+    return create (GUIObj)
+end
+
+function gui.env.image:render ()
+    love.graphics.setColor (255, 255, 255, 255)
+    
+    love.graphics.draw (self.image, self.x, self.y, self.orientation, self.scaleX, self.scaleY)
 end
 
 function gui.env.image:destroy ()
-    render.remove (self.imageID)
-    
     if (currentHoverGUIObject == self) then
         currentHoverGUIObject = nil
     end
@@ -141,15 +168,43 @@ function gui.env.image:destroy ()
     self = nil
 end
 
+function gui.env.image:center (intX, intY)
+    local intW, intH = self.image:getDimensions ()
+    intW = intW * self.scaleX
+    intH = intH * self.scaleY
+    
+    self.x = intX - intW/2
+    self.y = intY - intH/2
+    
+    self.bbox[1] = self.x
+    self.bbox[2] = self.y
+    self.bbox[3] = self.x + intW
+    self.bbox[4] = self.y + intH
+end
+
 function gui.env.image:setScale (int_sX, int_sY)
-    local t_Settings = render.get (self.imageID)
-    t_Settings[5], t_Settings[6] = int_sX, int_sY
+    int_sX = int_sX or self.scaleX
+    int_sY = int_sY or self.scaleY
+    local intW, intH = self.image:getDimensions ()
+    self.bbox[3] = self.x + intW * int_sX
+    self.bbox[4] = self.y + intH * int_sY
+    
+    self.scaleX = int_sX
+    self.scaleY = int_sY
+    
     return true
 end
 
 function gui.env.image:setPosition (intX, intY)
-    local t_Settings = render.get (self.imageID)
-    t_Settings[2], t_Settings[3] = intX, intY
+    local intW, intH = self.image:getDimensions ()
+    self.x = intX
+    self.y = intY
+    
+    self.bbox[1] = intX
+    self.bbox[2] = intY
+    self.bbox[3] = intX + intW
+    self.bbox[4] = intY + intH
+    
     return true
 end
 
@@ -160,16 +215,25 @@ end
 --]]
 
 function gui.createRectangle (strMode, intX, intY, intWidth, intHeight, t_Color)
-    intRandomID = intRandomID + 1
-    local strRectID = 'rect' .. intRandomID
-    render.add (strRectID, t_Color, nil, 'rectangle', strMode, intX, intY, intWidth, intHeight)
+    local GUIObj = {}
+    GUIObj.guiType  = 'rectangle'
+    GUIObj.x        = intX
+    GUIObj.y        = intY
+    GUIObj.w        = intWidth
+    GUIObj.h        = intHeight
+    GUIObj.color    = t_Color
+    GUIObj.mode     = strMode
+    GUIObj.bbox     = {intX, intY, intX + intWidth, intY + intHeight}
     
-    return create ({guiType = 'rectangle', rectID = strRectID, bbox = {intX, intY, intX+intWidth, intY+intHeight}})
+    return create (GUIObj)
+end
+
+function gui.env.rectangle:render ()
+    love.graphics.setColor (self.color)
+    love.graphics.rectangle (self.mode, self.x, self.y, self.w, self.h)
 end
 
 function gui.env.rectangle:destroy ()
-    render.remove (self.rectID)
-    
     if (currentHoverGUIObject == self) then
         currentHoverGUIObject = nil
     end
@@ -201,9 +265,7 @@ function isPointInsideBox (pX, pY, bX, bY, bX2, bY2)
 end
 
 function gui.env.generic:setColor (t_Color)
-    local t_Settings = render.get (self.textID)
-    t_Settings.color = t_Color
-    return true
+    self.color = t_Color
 end
 
 function gui.env.generic:setHoverHandler (strFunc_Enter, strFunc_Exit)
