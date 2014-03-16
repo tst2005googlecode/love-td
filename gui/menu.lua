@@ -35,26 +35,36 @@ function navigation_Return (rect)
     return menu.create ()
 end
 
+function navigation_HoverEnter ()
+    local GUIImage = nav.gui.images.returnArrow
+    GUIImage:setScale (0.6, 0.6)
+    GUIImage:center (GUIImage.centerX, GUIImage.centerY)
+end
+
+function navigation_HoverExit ()
+    local GUIImage = nav.gui.images.returnArrow
+    GUIImage:setScale (0.5, 0.5)
+    GUIImage:center (GUIImage.centerX, GUIImage.centerY)
+end
+
 function nav.create ()
     nav.gui = {rectangles = {}, images = {}}
 
     local image_Arrow = love.graphics.newImage ('media/arrow.png')
+    local GUIImage = gui.createImage (0, 0, image_Arrow)
+    nav.gui.images.returnArrow = GUIImage
     
-    local int_ReturnX, int_ReturnY = 50, 30
-    
-    nav.gui.rectangles.returnBg = gui.createRectangle ('line', int_ReturnX, int_ReturnY, 85, 45, {0, 0, 0, 128})
-    nav.gui.rectangles.returnBg:setClickHandler ('navigation_Return')
-    
-    nav.gui.images.returnArrow = gui.createImage (int_ReturnX + 11, int_ReturnY-10, image_Arrow)
-    nav.gui.images.returnArrow:setScale (0.5, 0.5)
+    GUIImage.centerX = 75
+    GUIImage.centerY = 50
+    GUIImage:setClickHandler ('navigation_Return')
+    GUIImage:setHoverHandler ('navigation_HoverEnter', 'navigation_HoverExit')
+    GUIImage:setScale (0.5, 0.5)
+    GUIImage:center (GUIImage.centerX, GUIImage.centerY)
 end
 
 function nav.destroy ()
     for _,image in pairs (nav.gui.images) do
         image:destroy ()
-    end
-    for _,rect in pairs (nav.gui.rectangles) do
-        rect:destroy ()
     end
     
     nav.gui = nil
