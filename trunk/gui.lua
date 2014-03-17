@@ -140,8 +140,8 @@ function gui.createImage (intX, intY, image)
     GUIObj.x            = intX
     GUIObj.y            = intY
     GUIObj.orientation  = 0
-    GUIObj.scaleX       = 0
-    GUIObj.scaleY       = 0
+    GUIObj.scaleX       = 1
+    GUIObj.scaleY       = 1
     GUIObj.image        = image
     GUIObj.bbox         = {intX, intY, intX+intW, intY+intH}
     
