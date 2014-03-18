@@ -234,7 +234,7 @@ function getTextRealHeight (strText, font)
     
     local intH = 0
     for _ in ipairs (t_Lines) do
-        intH = intH + font:getHeight
+        intH = intH + font:getHeight ()
     end
     
     return intH
