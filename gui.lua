@@ -233,6 +233,18 @@ function gui.env.rectangle:render ()
     love.graphics.rectangle (self.mode, self.x, self.y, self.w, self.h)
 end
 
+function gui.env.rectangle:setPosition (intX, intY)
+    self.x = intX
+    self.y = intY
+    
+    self.bbox[1] = intX
+    self.bbox[2] = intY
+    self.bbox[3] = intX + self.w
+    self.bbox[4] = intY + self.h
+    
+    return true
+end
+
 function gui.env.rectangle:destroy ()
     if (currentHoverGUIObject == self) then
         currentHoverGUIObject = nil
