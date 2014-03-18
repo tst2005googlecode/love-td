@@ -14,7 +14,7 @@ local BUTTON_W, BUTTON_H, BUTTON_M = 150, 50, 10
 
 local BG_COLOR = {23, 23, 23}
 
-local Menu = {gui = {env = {button = {}}}}
+local Menu = {gui = {env = {button = {}, image = {}}}}
 
 function quit()
     love.event.quit( )
@@ -22,7 +22,6 @@ end
 
 function main_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
-    
 
     Menu.gui.env.button.startGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*2 + BUTTON_M, BUTTON_W, BUTTON_H, 'Start Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'sm_menu_create' )
     Menu.gui.env.button.loadGame = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2 , BUTTON_W, BUTTON_H, 'Load Game', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'load_menu_create')
@@ -50,18 +49,24 @@ function sm_menu_create()
       Menu.gui.env.button.LoadSinglePlayer = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*2 + BUTTON_M, BUTTON_W, BUTTON_H, 'SinglePlayer', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'map_menu_create' )
       Menu.gui.env.button.LoadMultiPlayer = gui.createButton(WIN_W /2 - BUTTON_W/2, BUTTON_H*3 + BUTTON_M*2, BUTTON_W, BUTTON_H, 'MultiPlayer', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'multiplayer_menu_create' )
       Menu.gui.env.button.LoadsmBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
+    
+    return true
 end
 
 function score_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
     
     Menu.gui.env.button.scoreBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
+
+    return true
 end
 
 function load_menu_create()
     love.graphics.setBackgroundColor( BG_COLOR )
     
     Menu.gui.env.button.loadBack = gui.createButton(0+BUTTON_M, WIN_H-BUTTON_H-BUTTON_M, BUTTON_W, BUTTON_H, 'Back', t_buttonBgColor, t_buttonTextColor, 'OstrichSans', 'gui_setColor', 'gui_setColor', t_buttonBGColorHover, 'main_menu_create' )
+
+    return true
 end
 
 function multiplayer_menu_create()
