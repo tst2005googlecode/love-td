@@ -282,7 +282,7 @@ end
 
 function gui.env.label:setPosition (intX, intY)
     self.x = intX
-    self.y = intH
+    self.y = intY
     
     self.bbox[1] = intX
     self.bbox[2] = intY
