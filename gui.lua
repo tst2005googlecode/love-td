@@ -32,18 +32,14 @@ function gui.createButton(intX, intY, intW, intH, strText, t_BgColor, t_TextColo
     return true
 end
 
-function gui_setColor(strID, t_Color)
-       strID.color = t_Color 
-       
-       return true
-end
-
 function gui.createRectangle(intX, intY, intW, intH, t_BgColor)
     intOBID = intOBID +1
     
     local intRectID = 'Rectangle' .. intOBID
     
-    render.add(intRectID, t_BgColor, 'rectangle', nil, intX, intY, intW, intH, 'fill', intX, intY, intW, intH)
+    render.add(intRectID, t_BgColor, 'rectangle', nil, 'fill', intX, intY, intW, intH)
+    
+    return true
 end
 
 function gui.createImage(intX, intY, intW, intH, image)
@@ -51,10 +47,16 @@ function gui.createImage(intX, intY, intW, intH, image)
     
     local ImgID = 'Image' .. intOBID
     
-    render.add(ImgID, nil, 'draw', nil, intX, intY, intW, intH, image, intX, intY, 0 )
+    render.add(ImgID, {255, 255, 255, 255}, 'draw', nil, image, intX, intY, 0 )
+    
+    return true
 end
 
-
+function gui_setColor(strID, t_Color)
+    strID.color = t_Color 
+       
+    return true
+end
 
 function isPointInsideBox (pX, pY, bX, bY, bX2, bY2)
     if ((pX > bX)

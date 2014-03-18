@@ -17,7 +17,9 @@ t_IDs = {}
 
 local PROJECT_FILES = {
 'gui',
-'gui/mainMenu'
+'mainGame',
+'gui/mainMenu',
+'gui/interface'
 }
 
 
@@ -26,6 +28,10 @@ function love.load()
         assert(require(files), 'failed to load' .. files)
     end
     main_menu_create()
+    t_InterfaceMenu.sideMenushow()
+    t_InterfaceMenu.sideMenuHide()
+    t_InterfaceMenu.overlay()
+    
     return true
 end
 
@@ -40,6 +46,7 @@ function love.draw()
         
         love.graphics.setColor(unpack(t_Items.color))
         love.graphics[t_Items.method](unpack(t_Items))
+        love.graphics.setColor(255, 255, 255, 255)
        end
    end
    local mx, my = love.mouse.getPosition()
@@ -135,8 +142,11 @@ function render.removeAll()
     for k in pairs(t_renderIDs) do
         t_renderIDs[k] = nil
     end
+    
+    return true
 end
 
 function render.get (strID)
     return t_renderIDs[strID]
+    
 end
