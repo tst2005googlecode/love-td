@@ -56,7 +56,9 @@ end
 
 function deregisterGameCallbackFunc (strCallback, strFunc)
     for k,strCallbackFunc in ipairs (t_Callbacks[strCallback]) do
-        return table.remove (t_Callbacks[strCallback], k)
+        if (strCallbackFunc == strFunc) then
+            return table.remove (t_Callbacks[strCallback], k)
+        end
     end
 end
 
