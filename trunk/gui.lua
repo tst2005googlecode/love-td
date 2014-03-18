@@ -12,7 +12,7 @@
     
 --]]
 
-gui = {env = {image = {}, button = {}, rectangle = {}, generic = {}}, objects = {}}
+gui = {env = {image = {}, button = {}, rectangle = {}, label = {}, generic = {}}, objects = {}}
 COLORS = {['white'] = {255, 255, 255, 255}, ['black'] = {0, 0, 0, 255}, ['markerblack'] = {0, 0, 0, 128}}
 
 local t_FontData = {['VeraSans'] = love.graphics.newFont(14), ['OstrichSans'] = love.graphics.newFont('media/OstrichSans.otf', 22)}
@@ -20,6 +20,7 @@ local currentHoverGUIObject
 
 local guiGenericEnv_mt = {__index = function(t,k) return gui.env.generic[k] end}
 setmetatable (gui.env.image, guiGenericEnv_mt)
+setmetatable (gui.env.label, guiGenericEnv_mt)
 setmetatable (gui.env.button, guiGenericEnv_mt)
 setmetatable (gui.env.rectangle, guiGenericEnv_mt)
 
@@ -206,6 +207,87 @@ function gui.env.image:setPosition (intX, intY)
     self.bbox[4] = intY + intH
     
     return true
+end
+
+--[[
+
+    Labels
+    
+--]]
+
+function getTextRealWidth (strText, font)
+    local t_Lines = strText:split ('\n')
+    
+    local intW = 0
+    for _,strLine in ipairs (t_Lines) do
+        local intLineWidth = font:getWidth (strLine)
+        if (intLineWidth > intW) then
+            intW = intLineWidth
+        end
+    end
+    
+    return intW
+end
+
+function getTextRealHeight (strText, font)
+    local t_Lines = strText:split ('\n')
+    
+    local intH = 0
+    for _ in ipairs (t_Lines) do
+        intH = intH + font:getHeight
+    end
+    
+    return intH
+end
+
+function gui.createLabel (strText, intX, intY, t_Color, strFont)
+    local font = t_FontData[strFont]
+    local intW = getTextRealWidth (strText, font)
+    local intH = getTextRealHeight (strText, font)
+
+    local GUIObj = {}
+    GUIObj.guiType  = 'label'
+    GUIObj.x        = intX
+    GUIObj.y        = intY
+    GUIObj.w        = intW
+    GUIObj.h        = intH
+    GUIObj.color    = t_Color
+    GUIObj.text     = strText
+    GUIObj.font     = font
+    GUIObj.bbox     = {intX, intY, intX + intW, intY + intH}
+    
+    return create (GUIObj)
+end
+
+function gui.env.label:destroy ()
+    if (currentHoverGUIObject == self) then
+        currentHoverGUIObject = nil
+    end
+    
+    for k,GUIObj in ipairs (gui.objects) do
+        if (GUIObj == self) then
+            table.remove (gui.objects, k)
+        end
+    end
+    
+    self = nil
+end
+
+function gui.env.label:render ()
+    love.graphics.setColor (self.color)
+    love.graphics.setFont (self.font)
+    
+    love.graphics.print (self.text, self.x, self.y)
+end
+
+function gui.env.label:setPosition (intX, intY)
+    self.x = intX
+    self.y = intH
+    
+    self.bbox[1] = intX
+    self.bbox[2] = intY
+    self.bbox[3] = intX + self.w
+    self.bbox[4] = intY + self.h
 end
 
 --[[
