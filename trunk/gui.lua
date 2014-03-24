@@ -371,11 +371,10 @@ function gui.env.generic:setClickHandler (strFunc)
 end
 
 function gui_ClickHandler (int_mX, int_mY, strButton)
-    if (strButton ~= 'l') then return false end
     for k,GUIObj in ipairs (gui.objects) do
         if (GUIObj.clickHandler) then
             if (isPointInsideBox(int_mX, int_mY, unpack(GUIObj.bbox))) then
-                return _G[GUIObj.clickHandler](GUIObj, int_mX, int_mY)
+                return _G[GUIObj.clickHandler](GUIObj, strButton, int_mX, int_mY)
             end
         end
     end
