@@ -8,6 +8,7 @@
 
 function Game_load()
     LMap1 = love.graphics.newImage('Maps/Map1.png')
+    LMap2 = love.graphics.newImage('Maps/Map2.png')
 end
 
 function Game_draw()
@@ -15,5 +16,5 @@ function Game_draw()
 end
 
 function Game_update()
-
+    
 end
