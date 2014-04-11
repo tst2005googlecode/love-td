@@ -21,3 +21,12 @@ function table.removeArrayValue (t, v)
     
     return t
 end
+
+function table.getSize (t)
+    local i = 0
+    for _ in pairs (t) do
+        i = i + 1
+    end
+    
+    return i
+end
