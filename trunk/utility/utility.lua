@@ -5,7 +5,8 @@ end
 function table.removeValue (t, v)
     for k,j in pairs (t) do
         if (j == v) then
-            table.remove (t, k)
+            t[k] = nil
+            break
         end
     end
     
