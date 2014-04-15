@@ -41,10 +41,12 @@ function gui_doRender ()
     local t_PostGuiObjs = {}
     
     for _,GUIObj in ipairs (gui.objects) do
-        if (GUIObj.postgui) then
-            table.insert (t_PostGuiObjs, GUIObj)
-        else
-            GUIObj:render ()
+        if (not GUIObj.hide) then
+            if (GUIObj.postgui) then
+                table.insert (t_PostGuiObjs, GUIObj)
+            else
+                GUIObj:render ()
+            end
         end
     end
     
@@ -374,6 +376,10 @@ end
 
 function gui.env.generic:setPostGui (bPostGui)
     self.postgui = bPostGui
+end
+
+function gui.env.generic:setHidden (bHidden)
+    self.hide = bHidden
 end
 
 function gui.env.generic:setHoverHandler (strFunc_Enter, strFunc_Exit)
