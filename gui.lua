@@ -392,9 +392,11 @@ end
 
 function gui_ClickHandler (int_mX, int_mY, strButton)
     for k,GUIObj in ipairs (gui.objects) do
-        if (GUIObj.clickHandler) then
-            if (isPointInsideBox(int_mX, int_mY, unpack(GUIObj.bbox))) then
-                return _G[GUIObj.clickHandler](GUIObj, strButton, int_mX, int_mY)
+        if (not GUIObj.hide) then
+            if (GUIObj.clickHandler) then
+                if (isPointInsideBox(int_mX, int_mY, unpack(GUIObj.bbox))) then
+                    return _G[GUIObj.clickHandler](GUIObj, strButton, int_mX, int_mY)
+                end
             end
         end
     end
