@@ -406,7 +406,7 @@ registerGameCallbackFunc ('mousepressed', 'gui_ClickHandler')
 function gui_DoHoverHandler ()
     local int_mX, int_mY = love.mouse.getPosition ()
     if (currentHoverGUIObject) then
-        if (not isPointInsideBox(int_mX, int_mY, unpack(currentHoverGUIObject.bbox))) then
+        if (not isPointInsideBox(int_mX, int_mY, unpack(currentHoverGUIObject.bbox))) or (currentHoverGUIObject.hide) then
             _G[currentHoverGUIObject.hoverHandler['exit']](currentHoverGUIObject)
             currentHoverGUIObject = nil
         end
@@ -415,10 +415,12 @@ function gui_DoHoverHandler ()
     end
     
     for k,GUIObj in ipairs (gui.objects) do
-        if (GUIObj.hoverHandler) then
-            if (isPointInsideBox(int_mX, int_mY, unpack(GUIObj.bbox))) then
-                currentHoverGUIObject = GUIObj
-                return _G[GUIObj.hoverHandler['enter']](GUIObj, int_mX, int_mY)
+        if (not GUIObj.hide) then
+            if (GUIObj.hoverHandler) then
+                if (isPointInsideBox(int_mX, int_mY, unpack(GUIObj.bbox))) then
+                    currentHoverGUIObject = GUIObj
+                    return _G[GUIObj.hoverHandler['enter']](GUIObj, int_mX, int_mY)
+                end
             end
         end
     end
