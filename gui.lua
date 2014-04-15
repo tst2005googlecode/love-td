@@ -108,7 +108,7 @@ end
 
 function gui.env.button:setText (strText)
     self.text = strText
-    self.textX = self.x - self.w/2 - self.font:getWidth(strText)/2 + 2
+    self.textX = self.x + self.w/2 - self.font:getWidth(strText)/2 + 2
     
     return true
 end
