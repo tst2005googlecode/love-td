@@ -16,7 +16,8 @@ local PROJECT_FILES =
 {
 'gui',
 'gui/menu',
-'utility/utility_string'
+'utility/utility_string',
+'maps'
 }
 
 WIN_W, WIN_H = 800, 600
