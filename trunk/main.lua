@@ -1,14 +1,23 @@
 --[[
 
     main.lua
-        
-    * DEVELOPERS:   Joachim Andersen
+    code.google.com/p/love-td/
+    
+    Copyright (C) 2014 love-td
 
---]]
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
 
---[[
-
-    Main file, contains all game logic and LÖVE callbacks
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    **************************************************************
+    
+    **************************************************************
     
 --]]
 
@@ -16,8 +25,18 @@ local PROJECT_FILES =
 {
 'gui',
 'gui/menu',
+'gui/hud',
 'utility/utility_string',
-'maps'
+'utility/utility_math',
+'utility/utility',
+'audio',
+'timer',
+'map',
+'tower',
+'enemy',
+'levels',
+'game',
+'launcher'
 }
 
 WIN_W, WIN_H = 800, 600
@@ -63,28 +82,35 @@ function deregisterGameCallbackFunc (strCallback, strFunc)
     end
 end
 
---[[
+function love.draw (...)
+    for _,strCallbackFunc in ipairs (t_Callbacks.draw) do
+        _G[strCallbackFunc](...)
+    end
+    if (gui) then
+        gui_doRender ()
+    end
+end
 
-    Game data and logic
+local time = 0
+
+function love.update (dt)
+    if (dt > 0.025) then return false end
+    time = time + dt
     
---]]
+    for _,strCallbackFunc in ipairs (t_Callbacks.update) do
+        _G[strCallbackFunc](dt)
+    end
+end
 
-local t_GameData = {}
+function getTime ()
+    return time
+end
 
-function love.load ()
-    
+function love.load () 
     for i,file in ipairs (PROJECT_FILES) do
         require (file)
     end
-    
-    love.graphics.setBackgroundColor (102, 102, 102)
-    
-    menu.create ()
-    
-    return true
 end
-
-
 
 
 

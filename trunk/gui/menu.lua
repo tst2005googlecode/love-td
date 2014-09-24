@@ -23,6 +23,7 @@ local loadMenu = {}
 menu = {}
 
 function menu_ButtonEnterHover (button)
+    audio_getSource('click1'):play ()
     return button:setColor ({0, 0, 0, 200})
 end
 
@@ -72,7 +73,9 @@ end
 
 function menu.create ()
     menu.gui = {buttons = {}}
-
+    
+    love.graphics.setBackgroundColor (102, 102, 102)
+    
     menu.gui.buttons.startButton = gui.createButton (WIN_W / 2 - MENU_BUTTON_WIDTH / 2, WIN_H / 2 - MENU_BUTTON_HEIGHT / 2 - 200, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, 'Start game', COLORS.markerblack, COLORS.white, 'OstrichSans')
     menu.gui.buttons.loadButton = gui.createButton (WIN_W / 2 - MENU_BUTTON_WIDTH / 2, WIN_H / 2 - MENU_BUTTON_HEIGHT / 2 - 200 + MENU_BUTTON_HEIGHT + 10, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, 'Load game', COLORS.markerblack, COLORS.white, 'OstrichSans')
     menu.gui.buttons.scoreButton = gui.createButton (WIN_W / 2 - MENU_BUTTON_WIDTH / 2, WIN_H / 2 - MENU_BUTTON_HEIGHT / 2 - 200 + MENU_BUTTON_HEIGHT*2 + 10*2, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, 'Highscores', COLORS.markerblack, COLORS.white, 'OstrichSans')
@@ -102,8 +105,9 @@ end
 --]]
 
 function toggleMapMenu ()
+    audio_getSource('click2'):play ()
     menu.destroy ()
-    return mapMenu.create ()
+    return game_createGame ('spire')
 end
 
 function mapMenu.create ()
