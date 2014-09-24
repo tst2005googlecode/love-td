@@ -1,19 +1,30 @@
 --[[
 
     gui.lua
-        
-    * DEVELOPERS:   Joachim Andersen
+    code.google.com/p/love-td/
+    
+    Copyright (C) 2014 love-td
 
---]]
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
 
---[[
-
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    **************************************************************
+    
     Implements popular GUI components with love.graphics
+    
+    **************************************************************
     
 --]]
 
 gui = {env = {image = {}, button = {}, rectangle = {}, label = {}, generic = {}}, objects = {}}
-COLORS = {['white'] = {255, 255, 255, 255}, ['black'] = {0, 0, 0, 255}, ['markerblack'] = {0, 0, 0, 128}}
+COLORS = {['white'] = {255, 255, 255, 255}, ['black'] = {0, 0, 0, 255}, ['markerblack'] = {0, 0, 0, 128}, ['inv'] = {0, 0, 0, 0}}
 
 local t_FontData = {['VeraSans'] = love.graphics.newFont(14), ['OstrichSans'] = love.graphics.newFont('media/OstrichSans.otf', 22)}
 local currentHoverGUIObject
@@ -54,7 +65,6 @@ function gui_doRender ()
         GUIObj:render ()
     end
 end
-registerGameCallbackFunc ('draw', 'gui_doRender')
 
 --[[
 
@@ -152,17 +162,20 @@ function gui.createImage (intX, intY, image)
     GUIObj.guiType      = 'image'
     GUIObj.x            = intX
     GUIObj.y            = intY
+    GUIObj.w            = intW
+    GUIObj.h            = intH
     GUIObj.orientation  = 0
     GUIObj.scaleX       = 1
     GUIObj.scaleY       = 1
     GUIObj.image        = image
+    GUIObj.color        = COLORS.white
     GUIObj.bbox         = {intX, intY, intX+intW, intY+intH}
     
     return create (GUIObj)
 end
 
 function gui.env.image:render ()
-    love.graphics.setColor (255, 255, 255, 255)
+    love.graphics.setColor (unpack(self.color))
     
     love.graphics.draw (self.image, self.x, self.y, self.orientation, self.scaleX, self.scaleY)
 end
@@ -263,7 +276,7 @@ function gui.createLabel (strText, intX, intY, t_Color, strFont)
     GUIObj.y        = intY
     GUIObj.w        = intW
     GUIObj.h        = intH
-    GUIObj.color    = t_Color
+    GUIObj.color    = t_Color or COLORS.white
     GUIObj.text     = strText
     GUIObj.font     = font
     GUIObj.bbox     = {intX, intY, intX + intW, intY + intH}
@@ -300,6 +313,19 @@ function gui.env.label:setPosition (intX, intY)
     self.bbox[2] = intY
     self.bbox[3] = intX + self.w
     self.bbox[4] = intY + self.h
+end
+
+function gui.env.label:setText (strText)
+    self.text = strText
+    self.w = getTextRealWidth (strText, self.font)
+    self.h = getTextRealHeight (strText, self.font)
+end
+
+function gui.env.button:setText (strText)
+    self.text = strText
+    self.textX = self.x + self.w/2 - self.font:getWidth(strText)/2 + 2
+    
+    return true
 end
 
 --[[

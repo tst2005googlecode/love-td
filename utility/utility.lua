@@ -1,33 +1,35 @@
-function getTickCount ()
-    return love.timer.getTime() * 1000
-end
+--[[
 
-function table.removeValue (t, v)
-    for k,j in pairs (t) do
-        if (j == v) then
-            t[k] = nil
-            break
+    utility.lua
+    code.google.com/p/love-td/
+    
+    Copyright (C) 2014 love-td
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    **************************************************************
+    
+    **************************************************************
+    
+--]]
+
+function table.copy (t)
+    local copy = {}
+    for k,v in pairs (t) do
+        if (type(v) == 'table') then
+            copy[k] = table.copy (v)
+        else
+            copy[k] = v
         end
     end
     
-    return t
-end
-
-function table.removeArrayValue (t, v)
-    for i,j in ipairs (t) do
-        if (j == v) then
-            table.remove (t, i)
-        end
-    end
-    
-    return t
-end
-
-function table.getSize (t)
-    local i = 0
-    for _ in pairs (t) do
-        i = i + 1
-    end
-    
-    return i
+    return copy
 end
